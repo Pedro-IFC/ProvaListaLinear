@@ -1,6 +1,7 @@
 package nodo;
 
 public class Nodo<T> {
+	private Nodo<?> anterior=null;
 	private T dado;
 	private Nodo<?> proximo=null;
 	public Nodo(T dado) {
@@ -27,5 +28,11 @@ public class Nodo<T> {
 		builder.append("]");
 		return builder.toString();
 	}	
+	public Nodo<?> getAnterior() {
+		return anterior;
+	}
+	public void setAnterior(Nodo<?> anterior) {
+		this.anterior = anterior;
+	}
 	
 }
