@@ -1,4 +1,4 @@
-package listas;
+package estruturas;
 
 import nodo.Nodo;
 
@@ -9,4 +9,5 @@ public interface EstruturaGenerica{
 	public Nodo<?> getNodo(int posicao);
     public <T> boolean add(T dado);
     public int getSize();
+    public boolean hasSpace();
 }

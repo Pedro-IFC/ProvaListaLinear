@@ -1,6 +1,6 @@
 package gestao;
 
-import listas.EstruturaGenerica;
+import estruturas.EstruturaGenerica;
 
 public interface Gestor {
 	public EstruturaGenerica getEscopo();

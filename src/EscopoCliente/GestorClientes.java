@@ -1,8 +1,8 @@
 package EscopoCliente;
 
+import estruturas.EstruturaGenerica;
+import estruturas.ListaEncadeada;
 import gestao.Gestor;
-import listas.EstruturaGenerica;
-import listas.ListaEncadeada;
 
 public class GestorClientes implements Gestor{
 	private EstruturaGenerica escopo;

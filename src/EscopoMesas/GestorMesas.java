@@ -1,8 +1,8 @@
 package EscopoMesas;
 
+import estruturas.EstruturaGenerica;
+import estruturas.ListaEncadeada;
 import gestao.Gestor;
-import listas.EstruturaGenerica;
-import listas.ListaEncadeada;
 
 public class GestorMesas implements Gestor{
 	public EstruturaGenerica escopo = new ListaEncadeada();
