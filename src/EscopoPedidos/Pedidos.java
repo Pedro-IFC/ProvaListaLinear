@@ -10,6 +10,7 @@ public class Pedidos {
 	private String descricao;
 	private boolean cancelado;
 	private String status;
+	private Double preco;
 	public boolean isCancelado() {
 		return cancelado;
 	}
@@ -46,13 +47,39 @@ public class Pedidos {
 	public void setStatus(boolean cancelado) {
 		this.cancelado = cancelado;
 	}
-	public Pedidos(Cliente cliente, LocalDateTime hora, String descricao, boolean cancelado, String status) {
+	
+	public Double getPreco() {
+		return preco;
+	}
+	public void setPreco(Double preco) {
+		this.preco = preco;
+	}
+	public Pedidos(Cliente cliente, LocalDateTime hora, String descricao, boolean cancelado, String status, Double preco) {
 		super();
 		this.cliente = cliente;
 		this.hora = hora;
 		this.descricao = descricao;
 		this.cancelado = cancelado;
 		this.status = status;
+		this.preco = preco;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedidos [cliente=");
+		builder.append(cliente);
+		builder.append(", hora=");
+		builder.append(hora);
+		builder.append(", descricao=");
+		builder.append(descricao);
+		builder.append(", cancelado=");
+		builder.append(cancelado);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", preco=");
+		builder.append(preco);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 }
