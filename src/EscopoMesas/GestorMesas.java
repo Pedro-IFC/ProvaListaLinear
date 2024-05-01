@@ -19,15 +19,15 @@ public class GestorMesas implements Gestor{
 		Mesa mesaAtual = (Mesa) escopo.get(index);
 		mesaAtual.getClientes().add(cl);
 	}
-	public boolean cadastrar(String nome) {
-		Mesa mesa = new Mesa(nome);
+	public boolean cadastrar(String nome, int cadeiras) {
+		Mesa mesa = new Mesa(nome, cadeiras);
 		return escopo.add(mesa);
 	}
 	public boolean remover(int index) {
 		return escopo.remove(index);
 	}
-	public <T> boolean update(int index, String nome) {
-		Mesa mesa = new Mesa(nome);
+	public <T> boolean update(int index, String nome, int cadeiras) {
+		Mesa mesa = new Mesa(nome, cadeiras);
 		return escopo.set(index, mesa);
 	}
 	public Mesa get(int index) {

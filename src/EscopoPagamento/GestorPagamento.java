@@ -1,26 +1,26 @@
 package EscopoPagamento;
 
 import EscopoCliente.Cliente;
+import EscopoPedidos.Pedidos;
 import estruturas.EstruturaGenerica;
-import estruturas.Fila;
 import estruturas.ListaEncadeada;
 import gestao.Gestor;
 
 public class GestorPagamento implements Gestor{
-	public EstruturaGenerica escopo = new Fila();
-	public void cadastrar(ListaEncadeada pedidos, Cliente cliente) {
-		Pagamento pagamento = new Pagamento(pedidos, cliente);
+	public EstruturaGenerica escopo = new ListaEncadeada();
+	public void cadastrar(Pedidos pedido, Cliente cliente) {
+		Pagamento pagamento = new Pagamento(pedido, cliente);
 		escopo.add(pagamento);
 	}
-	public void update(ListaEncadeada pedidos, Cliente cliente) {
-		Pagamento pagamento = new Pagamento(pedidos, cliente);
-		escopo.set(-1, pagamento);
+	public void update(int index, Pedidos pedido, Cliente cliente) {
+		Pagamento pagamento = new Pagamento(pedido, cliente);
+		escopo.set(index, pagamento);
 	}
-	public void remove() {
-		escopo.remove(-1);
+	public void remove(int index) {
+		escopo.remove(index);
 	}
-	public void get() {
-		escopo.get(-1);
+	public Pagamento get(int index) {
+		return (Pagamento) escopo.get(index);
 	}
 	public EstruturaGenerica getEscopo() {
 		return escopo;

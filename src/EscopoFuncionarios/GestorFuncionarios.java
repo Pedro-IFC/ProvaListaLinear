@@ -13,8 +13,8 @@ public class GestorFuncionarios implements Gestor{
 		this.escopo=escopo;
 	}
 	public boolean cadastrar(String nome, String cargo) {
-		Funcionario fun = new Funcionario(nome, cargo);
-		return escopo.add(fun);
+		Funcionario f = new Funcionario(nome, cargo);
+		return escopo.add(f);
 	}
 	public boolean remover(int index) {
 		return escopo.remove(index);

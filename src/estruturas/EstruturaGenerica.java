@@ -10,4 +10,5 @@ public interface EstruturaGenerica{
     public <T> boolean add(T dado);
     public int getSize();
     public boolean hasSpace();
+    public void setLimite(int limite);
 }

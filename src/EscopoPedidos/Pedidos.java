@@ -1,12 +1,13 @@
 package EscopoPedidos;
 
-import java.time.LocalDateTime;
 
 import EscopoCliente.Cliente;
+import EscopoFuncionarios.Funcionario;
 
 public class Pedidos {
 	private Cliente cliente;
-	private LocalDateTime hora;
+	private Funcionario garcon;
+	private Funcionario cozinheiro;
 	private String descricao;
 	private boolean cancelado;
 	private String status;
@@ -17,35 +18,17 @@ public class Pedidos {
 	public void setCancelado(boolean cancelado) {
 		this.cancelado = cancelado;
 	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
 	public Cliente getCliente() {
 		return cliente;
 	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public LocalDateTime getHora() {
-		return hora;
-	}
-	public void setHora(LocalDateTime hora) {
-		this.hora = hora;
-	}
 	public String getDescricao() {
 		return descricao;
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}
-	public boolean isStatus() {
-		return cancelado;
-	}
-	public void setStatus(boolean cancelado) {
-		this.cancelado = cancelado;
 	}
 	
 	public Double getPreco() {
@@ -54,32 +37,33 @@ public class Pedidos {
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
-	public Pedidos(Cliente cliente, LocalDateTime hora, String descricao, boolean cancelado, String status, Double preco) {
+	public Pedidos(Cliente cliente, Funcionario garcon, Funcionario cozinheiro, String descricao, boolean cancelado, String status, Double preco) {
 		super();
 		this.cliente = cliente;
-		this.hora = hora;
+		this.garcon = garcon;
+		this.cozinheiro = cozinheiro;
 		this.descricao = descricao;
 		this.cancelado = cancelado;
-		this.status = status;
+		this.status=status;
 		this.preco = preco;
 	}
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Pedidos [cliente=");
-		builder.append(cliente);
-		builder.append(", hora=");
-		builder.append(hora);
-		builder.append(", descricao=");
-		builder.append(descricao);
-		builder.append(", cancelado=");
-		builder.append(cancelado);
-		builder.append(", status=");
-		builder.append(status);
-		builder.append(", preco=");
-		builder.append(preco);
-		builder.append("]");
-		return builder.toString();
+	public Funcionario getGarcon() {
+		return garcon;
+	}
+	public void setGarcon(Funcionario garcon) {
+		this.garcon = garcon;
+	}
+	public Funcionario getCozinheiro() {
+		return cozinheiro;
+	}
+	public void setCozinheiro(Funcionario cozinheiro) {
+		this.cozinheiro = cozinheiro;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

@@ -8,6 +8,7 @@ public class GestorClientes implements Gestor{
 	private EstruturaGenerica escopo = new ListaEncadeada();
 	public boolean cadastrar(String nome, int idade) {
 		Cliente cl = new Cliente(nome, idade);
+		cl.setEtapa("paraalmocar");
 		return escopo.add(cl);
 	}
 	public boolean remover(int index) {

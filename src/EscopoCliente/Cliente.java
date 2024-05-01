@@ -3,6 +3,7 @@ package EscopoCliente;
 public class Cliente {
 	private String nome;
 	private int idade;
+	private String etapa;
 	public Cliente(String nome, int idade) {
 		super();
 		this.nome = nome;
@@ -29,6 +30,12 @@ public class Cliente {
 		builder.append(idade);
 		builder.append("]");
 		return builder.toString();
+	}
+	public String getEtapa() {
+		return etapa;
+	}
+	public void setEtapa(String etapa) {
+		this.etapa = etapa;
 	}
 	
 }
