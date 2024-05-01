@@ -73,6 +73,7 @@ public class Restaurante {
 	public void fecharPedido(int index) {
 		if(gestorPedidos.get(index).getStatus()=="entregue") {
 			this.gestorPedidos.get(index).setStatus("finalizado");
+			gestorPedidos.get(index).getCliente().setEtapa("finalizado");
 			gestorPagamento.cadastrar(gestorPedidos.get(index), gestorPedidos.get(index).getCliente());
 		}else {
 			System.out.println("Nenhum pedido entregue com esse index");
@@ -101,7 +102,7 @@ public class Restaurante {
 		}
 	}
 	public void prepararPedido(int index) {
-		if(gestorPedidos.get(index).getStatus()=="cozinha") {
+		if(gestorPedidos.get(index).getStatus().contains("cozinha")) {
 			this.gestorPedidos.get(index).setStatus("pronto");
 		}else {
 			System.out.println("Nenhum pedido feito com esse index");
@@ -110,7 +111,7 @@ public class Restaurante {
 	public void atenderCliente(int index, String descricao, boolean cancelado, String status, Double preco) {
 		Funcionario fun = null;
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
-			if(gestorFuncionario.get(i).getCargo().toLowerCase()=="garçon") {
+			if(gestorFuncionario.get(i).getCargo().contains("garcon")) {
 				fun = gestorFuncionario.get(i);
 			}
 		}
@@ -120,7 +121,7 @@ public class Restaurante {
 		}
 		Funcionario f2 = null;
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
-			if(gestorFuncionario.get(i).getCargo().toLowerCase()=="cozinheiro") {
+			if(gestorFuncionario.get(i).getCargo().contains("cozinheiro")) {
 				f2 = gestorFuncionario.get(i);
 			}
 		}
@@ -135,6 +136,7 @@ public class Restaurante {
 		gestorPedidos.cadastrar(cliente, garcon, cozinheiro, descricao, cancelado, status, preco);
 	}
 	public void getFuncionarios() {
+		System.out.println("Você escolheu ver todos os funcionarios ");
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
 			System.out.println(gestorFuncionario.get(i));
 		}
@@ -148,30 +150,23 @@ public class Restaurante {
 	public void getMesas(boolean ocupada) {
 		int mesas = 0;
 		for(int i=0; i<gestorMesas.getSize();i++) {
-			if(gestorMesas.get(i).hasSpace()) {
+			if(gestorMesas.get(i).getClientes().getSize()==0) {
 				mesas++;
 			}
 		}
 		System.out.println("Mesas " +(ocupada?"ocupadas: ": "vazias: ") + (ocupada?gestorMesas.getSize()-mesas:mesas));
 	}
 	public void alocarMesa(int idCliente) {
-		if(idCliente<0) {
-			this.cadastrarCliente("Precisa preencher", 12);
-			idCliente = gestorClientes.getSize()-1;
-		}
-		if(gestorMesas.getEscopo().hasSpace()) {
-			if(gestorMesas.get(gestorMesas.getSize()-1).hasSpace()) {
+		for(int i=0; i<gestorMesas.getSize();i++) {
+			if(gestorMesas.get(i).getClientes().getSize()==0) {
 				Cliente cl = gestorClientes.get(idCliente);
-				gestorMesas.get(gestorMesas.getSize()-1).getClientes().add(cl);
-			}else {
-				System.out.println("Não possui cadeiras livres");
+				gestorMesas.get(i).getClientes().add(cl);
+				return ;
 			}
-		}else {
-			System.out.println("Não possui mesas");
 		}
 	}
 	public void cadastrarMesa(String nome, int cadeiras) {
-			gestorMesas.cadastrar(nome, cadeiras);
+		gestorMesas.cadastrar(nome, cadeiras);
 	}
 	public void getPedidos(boolean cancelado) {
 		System.out.println("Você escolheu ver todos os pedidos " + (cancelado?"cancelados":"não cancelados") );
@@ -182,11 +177,12 @@ public class Restaurante {
 		}
 	}
 	public void cancelarPedido(int index){
-		this.atualizarPedido(index, -1, null, null, true, null, null);
+		this.gestorFuncionario.remover(index);
 	}
-	public void atualizarPedido(int index, int indexCliente, Funcionario garcon, String descricao, boolean cancelado, String status, Double preco) {
+	public void atualizarPedido(int index, int indexCliente, int indexFun, String descricao, boolean cancelado, String status, Double preco) {
 		System.out.println("Você escolheu atualizar o pedido: " + gestorPedidos.get(index).getDescricao() );
-		Cliente cliente = gestorClientes.get(index);
+		Funcionario garcon = gestorFuncionario.get(indexFun);
+		Cliente cliente = gestorClientes.get(indexCliente);
 		if(cliente!=gestorPedidos.get(index).getCliente() && indexCliente>=0) {
 			gestorPedidos.get(index).setCliente(cliente);
 		}
@@ -216,7 +212,9 @@ public class Restaurante {
 	}
 	public void atualizarCliente(String nome, int idade, int index) {
 		System.out.println("Você escolheu atualizar o cliente: " + gestorClientes.get(index).getNome() );
-		gestorClientes.update(index, nome, idade);
+		Cliente cliente = gestorClientes.get(index);
+		cliente.setNome(nome);
+		cliente.setIdade(idade);
 	}
 	public void allClientes() {
 		System.out.println("Você escolheu ver todos os clientes");
@@ -228,7 +226,6 @@ public class Restaurante {
 		gestorClientes = new GestorClientes();
 		gestorFuncionario = new GestorFuncionarios();
 		gestorMesas = new GestorMesas();
-		gestorMesas.getEscopo().setLimite(this.nmesas);;
 		gestorPedidos = new GestorPedidos();
 		gestorPagamento = new GestorPagamento();
 	}

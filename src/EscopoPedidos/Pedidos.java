@@ -65,5 +65,25 @@ public class Pedidos {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedidos [cliente=");
+		builder.append(cliente);
+		builder.append(", garcon=");
+		builder.append(garcon);
+		builder.append(", cozinheiro=");
+		builder.append(cozinheiro);
+		builder.append(", descricao=");
+		builder.append(descricao);
+		builder.append(", cancelado=");
+		builder.append(cancelado);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", preco=");
+		builder.append(preco);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 }

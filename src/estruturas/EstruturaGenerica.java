@@ -11,4 +11,5 @@ public interface EstruturaGenerica{
     public int getSize();
     public boolean hasSpace();
     public void setLimite(int limite);
+    public int getLimite();
 }

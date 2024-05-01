@@ -6,14 +6,7 @@ import estruturas.ListaEncadeada;
 import gestao.Gestor;
 
 public class GestorMesas implements Gestor{
-	public EstruturaGenerica escopo = new ListaEncadeada();
-	
-	public EstruturaGenerica getEscopo() {
-		return escopo;
-	}
-	public void setEscopo(EstruturaGenerica escopo) {
-		this.escopo=escopo;
-	}
+	public EstruturaGenerica escopo =  new ListaEncadeada();
 	public void addCliente(int index, String nome, int idade) {
 		Cliente cl = new Cliente(nome, idade);
 		Mesa mesaAtual = (Mesa) escopo.get(index);
@@ -35,5 +28,11 @@ public class GestorMesas implements Gestor{
 	}
 	public int getSize() {
 		return escopo.getSize();
+	}
+	public EstruturaGenerica getEscopo() {
+		return escopo;
+	}
+	public void setEscopo(EstruturaGenerica escopo) {
+		this.escopo=escopo;
 	}
 }

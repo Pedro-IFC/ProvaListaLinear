@@ -20,6 +20,16 @@ public class Funcionario {
 		this.nome = nome;
 		this.cargo = cargo;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Funcionario [nome=");
+		builder.append(nome);
+		builder.append(", cargo=");
+		builder.append(cargo);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 	
 }

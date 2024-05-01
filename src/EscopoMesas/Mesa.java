@@ -7,8 +7,7 @@ public class Mesa {
 	private String nome;
 	public Mesa(String nome, int cadeiras) {
 		this.nome=nome;
-		this.clientes.setLimite(cadeiras);
-		clientes = new ListaEncadeada();
+		clientes = new ListaEncadeada(cadeiras);
 	}
 	public void nCadeiras(int n) {
 		this.clientes.setLimite(n);
