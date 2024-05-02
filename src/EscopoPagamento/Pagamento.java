@@ -6,6 +6,7 @@ import EscopoPedidos.Pedidos;
 public class Pagamento {
 	private Pedidos pedidoPago;
 	private Cliente clientepagando;
+	private boolean pago=false;
 	public String recibo() {
 		return "Recibo do pedido" + this.getPedidoPago().getDescricao() + "\nValor: " + this.getPedidoPago().getPreco() +
 				"\n Cliente: "+this.getClientepagando().getNome();
@@ -36,6 +37,12 @@ public class Pagamento {
 		builder.append(clientepagando);
 		builder.append("]");
 		return builder.toString();
+	}
+	public boolean isPago() {
+		return pago;
+	}
+	public void setPago(boolean pago) {
+		this.pago = pago;
 	}
 	
 }

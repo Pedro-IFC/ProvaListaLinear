@@ -1,7 +1,9 @@
 package Aplicacao;
 import java.util.Scanner;
 
+import EscopoMesas.Mesa;
 import Restaurante.Restaurante;
+import estruturas.ListaEncadeada;
 public class Main {
     static Scanner input = new Scanner(System.in);
     public static void main(String[] args) {
@@ -39,15 +41,21 @@ public class Main {
 	    System.out.println("[22]=Ver pessoas almoçando");
 	    System.out.println("[23]=Ver pessoas atendidas");
 	    System.out.println("[24]=Ver mesas livres");
+	    System.out.println("[25]=Pagar");
 	    System.out.print("Escolha uma das opções: ");
     	int num1 = input.nextInt();
 	    switch(num1) {
 	    	//[0]=Ver clientes
 	    	case 0:
-	    		Restaurante.getInstance().allClientes();
+	    		ListaEncadeada cls = Restaurante.getInstance().allClientes();
+	    		System.out.println("Você escolheu ver todos os clientes");
+	    		for(int i=0; i<cls.getSize(); i++) {
+	    			System.out.println(cls.get(i).toString());
+	    		}
     		break;
     	    //[1]=Atualizar cliente
 	    	case 1:
+	    		System.out.println("Você escolheu atualizar o cliente: ");
 	    		input.nextLine();
 	    		System.out.print("Novo nome: ");
 	    		String nome = input.nextLine();
@@ -59,6 +67,7 @@ public class Main {
     		break;
     	    //[2]=Remover cliente
 	    	case 2:
+	    	    System.out.println("Você escolheu remover o cliente");
 	    		input.nextLine();
 	    	    System.out.print("Id do cliente: ");
 	    	    index =  input.nextInt();
@@ -71,7 +80,8 @@ public class Main {
 	    		nome = input.nextLine();
 	    	    System.out.print("Idade: ");
 	    		idade =  input.nextInt();
-	    		Restaurante.getInstance().cadastrarCliente(nome, idade);;
+	    		System.out.println("Você escolheu cadastrar cliente");
+	    		Restaurante.getInstance().cadastrarCliente(nome, idade);
     		break;
     	    //[4]=Atualizar pedido
 	    	case 4:
@@ -88,6 +98,7 @@ public class Main {
 	    		String status = input.nextLine();
 	    	    System.out.print("Insira o preço: ");
 	    		Double preco = input.nextDouble();
+	    		System.out.println("Você escolheu atualizar o pedido");
 	    		Restaurante.getInstance().atualizarPedido(idPedido, idCliente, idFun, descricao, false, status, preco);
     		break;
     		//[5]=Cancelar pedido
@@ -99,8 +110,16 @@ public class Main {
     		break;
     	    //[6]=Ver pedidos
 	    	case 6:
-	    		Restaurante.getInstance().getPedidos(false);
-	    		Restaurante.getInstance().getPedidos(true);
+	    		System.out.println("Você escolheu ver todos os pedidos não cancelados");
+	    		ListaEncadeada pedidos = Restaurante.getInstance().getPedidos(false);
+	    		for(int i=0; i<pedidos.getSize(); i++) {
+	    			System.out.println(pedidos.toString());
+	    		}
+	    		System.out.println("Você escolheu ver todos os pedidos cancelados");
+	    		pedidos = Restaurante.getInstance().getPedidos(true);
+	    		for(int i=0; i<pedidos.getSize(); i++) {
+	    			System.out.println(pedidos.toString());
+	    		}
     		break;
     	    //[7]=Cadastrar mesa
 	    	case 7:
@@ -113,8 +132,16 @@ public class Main {
     		break;
     		//[8]=Ver mesas
 	    	case 8:
-	    		Restaurante.getInstance().getMesas(true);
-	    		Restaurante.getInstance().getMesas(false);
+	    		ListaEncadeada mesasL = Restaurante.getInstance().getMesas(true);
+	    		int mesasn = 0;
+	    		for(int i=0; i<mesasL.getSize();i++) {
+	    			Mesa aux = (Mesa) mesasL.get(i);
+	    			if(aux.getClientes().getSize()==0) {
+	    				mesasn++;
+	    			}
+	    		}
+	    		System.out.println("Mesas ocupadas: " + (mesasL.getSize()-mesasn));
+	    		System.out.println("Mesas vazias: " + mesasn);
     		break;
     		//[9]=Cadastrar funcionario
 	    	case 9:
@@ -134,14 +161,18 @@ public class Main {
     		break;
     		//[11]=Ver funcionarios
 	    	case 11:
-	    		Restaurante.getInstance().getFuncionarios();
+	    		System.out.println("Você escolheu ver todos os funcionarios ");
+	    		ListaEncadeada fs = Restaurante.getInstance().getFuncionarios();
+	    		for(int i=0; i<fs.getSize();i++) {
+	    			System.out.println(fs.get(i).toString());
+	    		}
     		break;
     		//[12]=Alocar mesa
 	    	case 12:
 	    		input.nextLine();
 	    	    System.out.print("Id do cliente: ");
 	    	    idCliente =  input.nextInt();
-	    		Restaurante.getInstance().alocarMesa(idCliente);
+	    		System.out.println(Restaurante.getInstance().alocarMesa(idCliente)?"Mesa alocada":"Mesa não alocada");
     		break;
     		//[13]=Atender cliente
 	    	case 13:
@@ -153,21 +184,34 @@ public class Main {
 	    		descricao =  input.nextLine();
 	    	    System.out.print("Insira o preço: ");
 	    		preco = input.nextDouble();
-	    		Restaurante.getInstance().atenderCliente(index, descricao, false, "", preco);
+	    		if(Restaurante.getInstance().atenderCliente(index, descricao, false, "", preco)) {
+					System.out.println("Cliente atendido");
+	    		}else {
+					System.out.println("Sem funcionários disponíveis");
+	    		}
     		break;
     		//[14]=Preparar Pedido
 	    	case 14:
 	    		input.nextLine();
 	    	    System.out.print("Id do pedido: ");
 	    	    index =  input.nextInt();
-	    		Restaurante.getInstance().prepararPedido(index);
+	    		;
+	    		if(Restaurante.getInstance().prepararPedido(index)) {
+	    			System.out.println("Pedido preparado");
+	    		}else {
+	    			System.out.println("Nenhum pedido feito com esse index");
+	    		}
     		break;
     		//[15]=Entregar Pedido
 	    	case 15:
 	    		input.nextLine();
 	    	    System.out.print("Id do pedido: ");
 	    	    index =  input.nextInt();
-	    		Restaurante.getInstance().entregarPedido(index);
+	    		if(Restaurante.getInstance().entregarPedido(index)) {
+	    			System.out.println("Pedido entregue");
+	    		}else {
+	    			System.out.println("Nenhum pedido feito com esse index");
+	    		}
     		break;
     		//[16]=Terminar Almoco
 	    	case 16:
@@ -181,39 +225,55 @@ public class Main {
 	    		input.nextLine();
 	    	    System.out.print("Id do pedido: ");
 	    	    index = input.nextInt();
-	    		Restaurante.getInstance().fecharPedido(index);
+	    		if(Restaurante.getInstance().fecharPedido(index)) {
+	    			System.out.println("Pedido fechado");
+	    		}else {
+	    			System.out.println("Nenhum pedido feito com esse index");
+	    		}
     		break;
     		//[18]=Gerar Recibo
 	    	case 18:
 	    		input.nextLine();
 	    	    System.out.println("Id do Pagamento: ");
 	    	    index =  input.nextInt();
-	    		Restaurante.getInstance().gerarRecibo(index);
+	    		System.out.println(Restaurante.getInstance().gerarRecibo(index));
     		break;
     		//[19]=Historico de Pagamentos
 	    	case 19:
-	    		Restaurante.getInstance().getHistoricoPagamentos();
+	    		ListaEncadeada h = Restaurante.getInstance().getHistoricoPagamentos();
+	    		for(int i=0; i<h.getSize();i++) {
+    				System.out.println(h.get(i).toString());
+	    		}
     		break;
     		//[20]=Ver pessoas para almoçar
 	    	case 20:
-	    		Restaurante.getInstance().numParaAlmocar();
+	    		System.out.println(Restaurante.getInstance().numParaAlmocar());
     		break;
     		//[21]=Ver pessoas na fila do caixa
 	    	case 21:
-	    		Restaurante.getInstance().numParaPagar();
+	    		System.out.println(Restaurante.getInstance().numParaPagar());
     		break;
     		//[22]=Ver pessoas almoçando
 	    	case 22:
-	    		Restaurante.getInstance().numAlmocando();
+	    		System.out.println(Restaurante.getInstance().numAlmocando());
     		break;
     		//[23]=Ver pessoas atendidas
 	    	case 23:
-	    		Restaurante.getInstance().numAtendidas();
+	    		System.out.println(Restaurante.getInstance().numAtendidas());
     		break;
     		//[24]=Ver mesas livres
 	    	case 24:
-	    		Restaurante.getInstance().getMesas(false);
+	    		System.out.println(Restaurante.getInstance().mesasLivres());
     		break;
+    		//[24]=Pagar
+	    	case 25:
+	    		input.nextLine();
+	    	    System.out.println("Id do Pagamento: ");
+	    	    index = input.nextInt();
+	    	    System.out.println("Valor a ser pago: ");
+	    	    Double pagamento = input.nextDouble();
+	    		Restaurante.getInstance().pagar(index, pagamento);
+	    	break;
 	    }
     }
 

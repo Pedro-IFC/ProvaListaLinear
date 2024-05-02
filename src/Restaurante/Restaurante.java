@@ -7,6 +7,7 @@ import EscopoFuncionarios.GestorFuncionarios;
 import EscopoMesas.GestorMesas;
 import EscopoPagamento.GestorPagamento;
 import EscopoPedidos.GestorPedidos;
+import estruturas.ListaEncadeada;
 
 public class Restaurante {
 	private int nmesas;
@@ -16,68 +17,127 @@ public class Restaurante {
 	private GestorPedidos gestorPedidos;
 	private GestorPagamento gestorPagamento;
 	private static Restaurante instancia;
-	
-	public void mesasLivres() {
+	public ListaEncadeada getAtendidas() {
+		ListaEncadeada n = new ListaEncadeada();
+		for(int i=0; i<gestorClientes.getSize(); i++) {
+			if(gestorClientes.get(i).getEtapa()=="finalizado") {
+				n.add(gestorClientes.get(i));
+			}
+		}
+		return n;
+	}
+	public ListaEncadeada getAlmocando() {
+		ListaEncadeada n = new ListaEncadeada();
+		for(int i=0; i<gestorClientes.getSize(); i++) {
+			if(gestorClientes.get(i).getEtapa()=="almocando") {
+				System.out.println(gestorClientes.get(i));
+			}
+		}
+		return n;
+	}
+	public ListaEncadeada getParaPagar() {
+		ListaEncadeada n = new ListaEncadeada();
+		for(int i=0; i<gestorClientes.getSize(); i++) {
+			if(gestorClientes.get(i).getEtapa()=="caixa") {
+				System.out.println(gestorClientes.get(i));
+			}
+		}
+		return n;
+	}
+	public ListaEncadeada getParaAlmocar() {
+		ListaEncadeada n = new ListaEncadeada();
+		for(int i=0; i<gestorClientes.getSize(); i++) {
+			if(gestorClientes.get(i).getEtapa()=="paraalmocar") {
+				n.add(gestorClientes.get(i));
+			}
+		}
+		return n;
+	}
+	public int mesasLivres() {
 		int n=0;
 		for(int i=0; i<gestorMesas.getSize(); i++) {
 			if(gestorMesas.get(i).getClientes().getSize()==0) {
 				n++;
 			}
 		}
-		System.out.println(n);
+		return n;
 	}
-	public void numAtendidas() {
+	public int numAtendidas() {
 		int n=0;
 		for(int i=0; i<gestorClientes.getSize(); i++) {
-			if(gestorClientes.get(i).getEtapa()=="finalizado") {
+			if(gestorClientes.get(i).getEtapa()=="caifora") {
 				n++;
 			}
 		}
-		System.out.println(n);
+		return n;
 	}
-	public void numAlmocando() {
+	public int numAlmocando() {
 		int n=0;
 		for(int i=0; i<gestorClientes.getSize(); i++) {
 			if(gestorClientes.get(i).getEtapa()=="almocando") {
 				n++;
 			}
 		}
-		System.out.println(n);
+		return n;
 	}
-	public void numParaPagar() {
+	public int numParaPagar() {
 		int n=0;
 		for(int i=0; i<gestorClientes.getSize(); i++) {
 			if(gestorClientes.get(i).getEtapa()=="caixa") {
 				n++;
 			}
 		}
-		System.out.println(n);
+		return n;
 	}
-	public void numParaAlmocar() {
+	public int numParaAlmocar() {
 		int n=0;
 		for(int i=0; i<gestorClientes.getSize(); i++) {
 			if(gestorClientes.get(i).getEtapa()=="paraalmocar") {
 				n++;
 			}
 		}
-		System.out.println(n);
+		return n;
 	}
-	public void getHistoricoPagamentos() {
+	public ListaEncadeada getHistoricoPagamentos() {
+		ListaEncadeada h = new ListaEncadeada();
 		for(int i=0; i<gestorPagamento.getSize();i++) {
-			System.out.println(gestorPagamento.get(i));
+			if(gestorPagamento.get(i).isPago()) {
+				h.add(gestorPagamento.get(i));
+			}
 		}
+		return h;
 	}
-	public void gerarRecibo(int index) {
-		System.out.println(gestorPagamento.get(index).recibo());
-	}
-	public void fecharPedido(int index) {
-		if(gestorPedidos.get(index).getStatus()=="entregue") {
-			this.gestorPedidos.get(index).setStatus("finalizado");
-			gestorPedidos.get(index).getCliente().setEtapa("finalizado");
-			gestorPagamento.cadastrar(gestorPedidos.get(index), gestorPedidos.get(index).getCliente());
+	public boolean pagar(int index, double pagamento) {
+		if(!gestorPagamento.get(index).isPago()) {
+			if(pagamento>=gestorPagamento.get(index).getPedidoPago().getPreco()) {
+				System.out.println("Troco deve ser de: " + (pagamento-gestorPagamento.get(index).getPedidoPago().getPreco()));
+				gestorPagamento.get(index).setPago(true);
+				gestorPagamento.get(index).getClientepagando().setEtapa("caifora");
+				return true;
+			}else {
+				System.out.println("Faltou dinheiro");
+			}
 		}else {
-			System.out.println("Nenhum pedido entregue com esse index");
+			System.out.println("Pagamento já realizado para este ID");
 		}
+		return false;
+	}
+	public String gerarRecibo(int index) {
+		if(gestorPagamento.get(index).isPago()) {
+			return (gestorPagamento.get(index).recibo());
+		}else {
+			return ("Nenhum pagamento realizado para este ID");
+			
+		}
+	}
+	public boolean fecharPedido(int index) {
+		if(gestorPedidos.get(index).getStatus()=="entregue") {
+			this.gestorPedidos.get(index).setStatus("caixa");
+			gestorPedidos.get(index).getCliente().setEtapa("caixa");
+			gestorPagamento.cadastrar(gestorPedidos.get(index), gestorPedidos.get(index).getCliente());
+			return true;
+		}
+		return false;
 	}
 	public void terminarAlmoco(int index) {
 		int iMesa =0;
@@ -93,22 +153,22 @@ public class Restaurante {
 			gestorMesas.get(iMesa).getClientes().remove(0);
 		}
 	}
-	public void entregarPedido(int index) {
+	public boolean entregarPedido(int index) {
 		if(gestorPedidos.get(index).getStatus()=="pronto") {
 			this.gestorPedidos.get(index).setStatus("entregue");
 			gestorPedidos.get(index).getCliente().setEtapa("almocando");
-		}else {
-			System.out.println("Nenhum pedido pronto com esse index");
+			return true;
 		}
+		return false;
 	}
-	public void prepararPedido(int index) {
+	public boolean prepararPedido(int index) {
 		if(gestorPedidos.get(index).getStatus().contains("cozinha")) {
 			this.gestorPedidos.get(index).setStatus("pronto");
-		}else {
-			System.out.println("Nenhum pedido feito com esse index");
+			return true;
 		}
+		return false;
 	}
-	public void atenderCliente(int index, String descricao, boolean cancelado, String status, Double preco) {
+	public boolean atenderCliente(int index, String descricao, boolean cancelado, String status, Double preco) {
 		Funcionario fun = null;
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
 			if(gestorFuncionario.get(i).getCargo().contains("garcon")) {
@@ -116,8 +176,7 @@ public class Restaurante {
 			}
 		}
 		if(fun==null) {
-			System.out.println("Sem garçons");
-			return ;
+			return false;
 		}
 		Funcionario f2 = null;
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
@@ -126,20 +185,20 @@ public class Restaurante {
 			}
 		}
 		if(f2==null) {
-			System.out.println("Sem cozinheiros");
-			return ;
+			return false;
 		}
 		this.cadastrarPedido(gestorClientes.get(index), fun, f2, descricao, cancelado, "cozinha", preco);
+		return true;
 	}
 	public void cadastrarPedido(Cliente cliente, Funcionario garcon, Funcionario cozinheiro, String descricao, boolean cancelado, String status, Double preco) {
-		
 		gestorPedidos.cadastrar(cliente, garcon, cozinheiro, descricao, cancelado, status, preco);
 	}
-	public void getFuncionarios() {
-		System.out.println("Você escolheu ver todos os funcionarios ");
+	public ListaEncadeada getFuncionarios() {
+		ListaEncadeada fs = new ListaEncadeada();
 		for(int i=0; i<gestorFuncionario.getSize();i++) {
-			System.out.println(gestorFuncionario.get(i));
+			fs.add(gestorFuncionario.get(i));
 		}
+		return fs;
 	}
 	public void removerFuncionario(int index) {
 		this.gestorFuncionario.remover(index);
@@ -147,40 +206,44 @@ public class Restaurante {
 	public void cadastrarFuncionario(String nome, String cargo) {
 		this.gestorFuncionario.cadastrar(nome, cargo);
 	}
-	public void getMesas(boolean ocupada) {
-		int mesas = 0;
+	public ListaEncadeada getMesas(boolean ocupada) {
+		ListaEncadeada n = new ListaEncadeada();
 		for(int i=0; i<gestorMesas.getSize();i++) {
-			if(gestorMesas.get(i).getClientes().getSize()==0) {
-				mesas++;
-			}
+			n.add(gestorMesas.get(i));
 		}
-		System.out.println("Mesas " +(ocupada?"ocupadas: ": "vazias: ") + (ocupada?gestorMesas.getSize()-mesas:mesas));
+		return n;
 	}
-	public void alocarMesa(int idCliente) {
+	public boolean alocarMesa(int idCliente) {
 		for(int i=0; i<gestorMesas.getSize();i++) {
 			if(gestorMesas.get(i).getClientes().getSize()==0) {
 				Cliente cl = gestorClientes.get(idCliente);
 				gestorMesas.get(i).getClientes().add(cl);
-				return ;
+				return true;
 			}
 		}
+		return false;
 	}
 	public void cadastrarMesa(String nome, int cadeiras) {
 		gestorMesas.cadastrar(nome, cadeiras);
 	}
-	public void getPedidos(boolean cancelado) {
-		System.out.println("Você escolheu ver todos os pedidos " + (cancelado?"cancelados":"não cancelados") );
+	public void atualizarFuncionario(String nome, String cargo, int index) {
+		Funcionario funcionario = gestorFuncionario.get(index);
+		funcionario.setNome(nome);
+		funcionario.setCargo(cargo);
+	}
+	public ListaEncadeada getPedidos(boolean cancelado) {
+		ListaEncadeada r = new ListaEncadeada();
 		for(int i=0; i<gestorPedidos.getSize(); i++) {
 			if(cancelado==gestorPedidos.get(i).isCancelado()) {
-				System.out.println(gestorPedidos.get(i).toString());
+				r.add(gestorPedidos.get(i));
 			}
 		}
+		return r;
 	}
 	public void cancelarPedido(int index){
 		this.gestorFuncionario.remover(index);
 	}
 	public void atualizarPedido(int index, int indexCliente, int indexFun, String descricao, boolean cancelado, String status, Double preco) {
-		System.out.println("Você escolheu atualizar o pedido: " + gestorPedidos.get(index).getDescricao() );
 		Funcionario garcon = gestorFuncionario.get(indexFun);
 		Cliente cliente = gestorClientes.get(indexCliente);
 		if(cliente!=gestorPedidos.get(index).getCliente() && indexCliente>=0) {
@@ -203,24 +266,22 @@ public class Restaurante {
 		}
 	}
 	public void cadastrarCliente(String nome, int idade) {
-		System.out.println("Você escolheu cadastrar cliente");
 		gestorClientes.cadastrar(nome, idade);
 	}
 	public void removerCliente(int index) {
-		System.out.println("Você escolheu remover o cliente: " + gestorClientes.get(index).getNome());
 		gestorClientes.remover(index);
 	}
 	public void atualizarCliente(String nome, int idade, int index) {
-		System.out.println("Você escolheu atualizar o cliente: " + gestorClientes.get(index).getNome() );
 		Cliente cliente = gestorClientes.get(index);
 		cliente.setNome(nome);
 		cliente.setIdade(idade);
 	}
-	public void allClientes() {
-		System.out.println("Você escolheu ver todos os clientes");
+	public ListaEncadeada allClientes() {
+		ListaEncadeada r = new ListaEncadeada();
 		for(int i=0; i<gestorClientes.getSize(); i++) {
-			System.out.println(gestorClientes.get(i).toString());
+			r.add(gestorClientes.get(i));
 		}
+		return r;
 	}
 	private Restaurante() {
 		gestorClientes = new GestorClientes();
